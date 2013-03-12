@@ -1,6 +1,5 @@
 package com.damien.states;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -10,45 +9,53 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import com.damien.main.Driver;
 
-public class StartScreen extends BasicGameState
+public class GameplayScreen extends BasicGameState
 {
 	int stateID;
-	
-	public StartScreen(int id)
+
+	public GameplayScreen(int id)
 	{
-		stateID = id;	
-	}//end of constructor
-	
+		stateID = id;
+	}
+
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException
 	{
-			
-	}//end of init
+
+
+	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) throws SlickException
 	{
-		g.setColor(new Color(Color.cyan));
-		g.drawString("Start Screen", 300, 10);
-	}//end of render
+
+		g.drawString("Gameplay", 300, 10);
+	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException
 	{
+
 		/* Get keyboard and mouse input */
 		Input input = gc.getInput();
 		
-		if(input.isKeyPressed(Input.KEY_ENTER))
+		if(input.isKeyPressed(Input.KEY_ESCAPE))
 		{
-			sb.enterState(Driver.GAMEPLAYSCREEN);
+			sb.enterState(Driver.ENDSCREEN);
 		}
-		
-	}//end of update
+		if(input.isKeyPressed(Input.KEY_P))
+		{
+			sb.enterState(Driver.PAUSESCREEN);
+		}
+
+	}
 
 	@Override
 	public int getID()
 	{
-		return stateID;	
-	}//end of getID
 
-}//end of class StartScreen
+		return stateID;
+	}
+
+
+}
