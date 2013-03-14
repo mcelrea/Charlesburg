@@ -10,7 +10,6 @@ public class Bullet extends Sprite {
 	
 	public Bullet(Image i) {
 		super(i);
-		// TODO Auto-generated constructor stub
 	}
 
 }
