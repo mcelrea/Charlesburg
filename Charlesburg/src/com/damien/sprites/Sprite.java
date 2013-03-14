@@ -9,13 +9,14 @@ import org.newdawn.slick.SlickException;
 public class Sprite {
 
 	//fields
-	float x,y;
-	float speed, backSpeed;
-	Image image;
-	float angle;
-	float vx, vy; //velocity in x and y directions
-	boolean alive;
-	float turnSpeed;
+	public float x;
+	public float y;
+	public float speed, backSpeed;
+	public Image image;
+	public float angle;
+	public float vx, vy; //velocity in x and y directions
+	public boolean alive;
+	public float turnSpeed;
 
 	//constructors
 	public Sprite(Image i)
