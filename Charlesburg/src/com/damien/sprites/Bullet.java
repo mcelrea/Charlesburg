@@ -5,7 +5,7 @@ import org.newdawn.slick.Image;
 
 public class Bullet extends Sprite {
 
-	Sprite owner;
+	public Sprite owner;
 	float damage;
 	
 	public Bullet(Image i) {
