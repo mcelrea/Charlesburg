@@ -11,6 +11,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import com.damien.Map.Area;
 import com.damien.main.Driver;
 import com.damien.sprites.Bullet;
 import com.damien.sprites.Sprite;
@@ -21,6 +22,8 @@ public class GameplayScreen extends BasicGameState
 	Sprite player;
 
 	ArrayList<Bullet> bullets;
+	
+	Area testArea;
 
 	public GameplayScreen(int id)
 	{
@@ -38,13 +41,15 @@ public class GameplayScreen extends BasicGameState
 		player.speed = 0.2f;
 
 		bullets = new ArrayList<Bullet>();
+		
+		testArea = new Area("data/map1.tmx");
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) throws SlickException
 	{
-		g.setColor(Color.white);
-		g.fillRect(0, 0, 800, 600);
+		testArea.draw(g);
+		
 		renderBullets(gc, sb, g);
 		player.draw(g);
 	}
