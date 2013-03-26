@@ -465,6 +465,26 @@ public class Sprite {
 
 		return bullet;
 	}//end shootBullet
+	
+	public void moveLeft(int delta)
+	{
+		x -= speed * delta;
+	}
+	
+	public void moveRight(int delta)
+	{
+		x += speed * delta;
+	}
+	
+	public void moveUp(int delta)
+	{
+		y -= speed * delta;
+	}
+	
+	public void moveDown(int delta)
+	{
+		y += speed * delta;
+	}
 
 }//end  class
 

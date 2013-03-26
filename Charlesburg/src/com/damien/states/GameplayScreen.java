@@ -14,12 +14,17 @@ import org.newdawn.slick.state.StateBasedGame;
 import com.damien.Map.Area;
 import com.damien.main.Driver;
 import com.damien.sprites.Bullet;
+import com.damien.sprites.Enemy;
+import com.damien.sprites.Player;
 import com.damien.sprites.Sprite;
+import com.damien.sprites.StoneGholem;
 
 public class GameplayScreen extends BasicGameState
 {
 	int stateID;
-	Sprite player;
+	Player player;
+	
+	ArrayList<Enemy> enemies;
 
 	ArrayList<Bullet> bullets;
 	
@@ -33,7 +38,7 @@ public class GameplayScreen extends BasicGameState
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException
 	{
-		player = new Sprite(new Image("images/animated.gif"));
+		player = new Player(new Image("images/Ruby trainer.png"));
 		player.x = 300;
 		player.y = 300;
 		player.alive = true;
@@ -41,8 +46,30 @@ public class GameplayScreen extends BasicGameState
 		player.speed = 0.2f;
 
 		bullets = new ArrayList<Bullet>();
+		enemies = new ArrayList<Enemy>();
+		initEnemies();
 		
 		testArea = new Area("data/map1.tmx");
+	}
+	
+	public void initEnemies() throws SlickException
+	{
+		StoneGholem e = new StoneGholem(new Image("Images/stoneGolem.png"));
+		e.x = 700;
+		e.y = 300;
+		e.alive = true;
+		
+		enemies.add(e);
+	}
+	
+	public void renderEnemies(GameContainer gc, StateBasedGame sb, Graphics g) throws SlickException
+	{
+		//for every enemy
+		for(int i=0; i < enemies.size(); i++)
+		{
+			Enemy e = enemies.get(i); //get the current enemy
+			e.draw(g); //draw the current enemy
+		}
 	}
 
 	@Override
@@ -51,6 +78,7 @@ public class GameplayScreen extends BasicGameState
 		testArea.draw(g);
 		
 		renderBullets(gc, sb, g);
+		renderEnemies(gc, sb, g);
 		player.draw(g);
 	}
 
@@ -68,18 +96,30 @@ public class GameplayScreen extends BasicGameState
 		/* Turn Left */
 		if(input.isKeyDown(Input.KEY_A) || input.isKeyDown(Input.KEY_LEFT))
 		{
-			player.rotateLeft(delta);
+			player.moveLeft(delta);
 		}
 		/* Turn Right */
 		if(input.isKeyDown(Input.KEY_D) || input.isKeyDown(Input.KEY_RIGHT))
 		{
-			player.rotateRight(delta);
+			player.moveRight(delta);
 		}//end if
 		/* Move Forward */
 		if(input.isKeyDown(Input.KEY_W) || input.isKeyDown(Input.KEY_UP))
 		{
-			player.moveForward(delta);
+			player.moveUp(delta);
 		}//end if
+		if(input.isKeyDown(Input.KEY_S) || input.isKeyDown(Input.KEY_DOWN))
+		{
+			player.moveDown(delta);
+		}//end if
+		
+		/* Shoot bullets with mouse */
+		if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON))
+		{
+			//create a bullet that travels towards the mouse location
+			Bullet b = player.shootBullet(input.getMouseX(), input.getMouseY());
+			bullets.add(b); //add the new bullet to the list
+		}
 
 		/* Shoot bullets */
 		if(input.isKeyPressed(Input.KEY_SPACE))
@@ -121,13 +161,8 @@ public class GameplayScreen extends BasicGameState
 		//for every bullet in the list
 		for(int i=0; i < bullets.size(); i++)
 		{
-			bullets.get(i).moveForward(delta);//move the current bullet
-			//if the current goes off the screen
-			if(bullets.get(i).isOffScreen(gc))
-			{
-				bullets.remove(i); //remove the bullet from the list
-				i--; //decrement the size of the list
-			}//end if
+			Bullet b = bullets.get(i); //get the current bullet
+			b.update(delta); //update the current bullet
 		}//end for loop
 	}//end updateBullets
 

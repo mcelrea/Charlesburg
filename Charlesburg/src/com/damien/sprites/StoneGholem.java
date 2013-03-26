@@ -4,9 +4,9 @@ import org.newdawn.slick.Image;
 
 import com.damien.Map.Area;
 
-public class Enemy extends Sprite{
+public class StoneGholem extends Enemy{
 
-	public Enemy(Image i) {
+	public StoneGholem(Image i) {
 		super(i);
 		// TODO Auto-generated constructor stub
 	}
