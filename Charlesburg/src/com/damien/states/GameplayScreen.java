@@ -57,8 +57,15 @@ public class GameplayScreen extends BasicGameState
 		StoneGholem e = new StoneGholem(new Image("Images/stoneGolem.png"));
 		e.x = 700;
 		e.y = 300;
+		e.angle = 270; //to the left
 		e.alive = true;
+		enemies.add(e);
 		
+		e = new StoneGholem(new Image("Images/stoneGolem.png"));
+		e.x = 700;
+		e.y = 500;
+		e.angle = 270; //to the left
+		e.alive = true;
 		enemies.add(e);
 	}
 	
@@ -134,6 +141,17 @@ public class GameplayScreen extends BasicGameState
 			bullets.add(b);//add to the list of bullets
 		}//end if
 	}//end updatePlayer
+	
+	public void updateEnemies(GameContainer gc, StateBasedGame sb, int delta) throws SlickException
+	{
+		//for every enemy
+		for(int i=0; i < enemies.size(); i++)
+		{
+			Enemy e = enemies.get(i);  //get the current enemy
+			e.act(delta, testArea, player, bullets); //tell the current enemy to act
+		}//end for
+		
+	}//end updateEnemies
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException
@@ -154,6 +172,7 @@ public class GameplayScreen extends BasicGameState
 		}
 
 		updateBullets(gc,sb,delta);
+		updateEnemies(gc, sb, delta);
 	}
 
 	public void updateBullets(GameContainer gc, StateBasedGame sb, int delta) throws SlickException
