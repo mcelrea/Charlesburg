@@ -1,6 +1,7 @@
 package com.damien.states;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -25,14 +26,25 @@ public class GameplayScreen extends BasicGameState
 	Player player;
 	
 	ArrayList<Enemy> enemies;
-
 	ArrayList<Bullet> bullets;
+	
+	/* variables to control the spawning of StoneGholems */
+	long gholemDelay = 3000; //1000 = 1 second
+	long nextGholem; //the exact time the next StoneGholem will appear
+	Random rand = new Random(); //random number generator
+	
 	
 	Area testArea;
 
 	public GameplayScreen(int id)
 	{
 		stateID = id;
+	}
+	
+	//this method runs every time the GAMEPLAY screen is entered
+	public void enter(GameContainer gc, StateBasedGame sb)
+	{
+		nextGholem = System.currentTimeMillis() + gholemDelay;
 	}
  
 	@Override
@@ -151,6 +163,29 @@ public class GameplayScreen extends BasicGameState
 		}//end for
 		
 	}//end updateEnemies
+	
+	public void spawnGholems() throws SlickException
+	{
+		if(System.currentTimeMillis() >= nextGholem)
+		{
+			//choice will either be a 0 or 1
+			int choice = rand.nextInt(2);
+			
+			StoneGholem e = new StoneGholem(new Image("Images/stoneGolem.png"));
+			
+			if(choice == 0)
+				e.x = 10;
+			else
+				e.x = 700;
+			
+			e.y = rand.nextInt(500);
+			e.angle = 270; //to the left
+			e.alive = true;
+			enemies.add(e);
+			
+			nextGholem = System.currentTimeMillis() + gholemDelay;
+		}//end if
+	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException
@@ -160,6 +195,7 @@ public class GameplayScreen extends BasicGameState
 		Input input = gc.getInput();
 
 		updatePlayer(gc, sb, delta, input);
+		spawnGholems();
 
 		if(input.isKeyPressed(Input.KEY_ESCAPE))
 		{
