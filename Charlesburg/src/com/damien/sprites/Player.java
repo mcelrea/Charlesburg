@@ -5,9 +5,11 @@ import org.newdawn.slick.SlickException;
 
 public class Player extends Sprite{
 
-	public Player(Image i) {
+	public Player(Image i)
+	{
 		super(i);
-		// TODO Auto-generated constructor stub
+		
+		health = 20;
 	}
 
 	public Bullet shootBullet(int xloc, int yloc) throws SlickException

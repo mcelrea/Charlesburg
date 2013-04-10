@@ -17,11 +17,13 @@ public class Sprite {
 	public float vx, vy; //velocity in x and y directions
 	public boolean alive;
 	public float turnSpeed;
+	public int health;
 
 	//constructors
 	public Sprite(Image i)
 	{
 		image = i;
+		health = 1;
 	}//end constructor Sprite
 
 	//methods

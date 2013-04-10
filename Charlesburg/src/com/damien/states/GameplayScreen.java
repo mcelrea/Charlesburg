@@ -34,15 +34,14 @@ public class GameplayScreen extends BasicGameState
 	{
 		stateID = id;
 	}
-
+ 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException
 	{
 		player = new Player(new Image("images/Ruby trainer.png"));
 		player.x = 300;
 		player.y = 300;
-		player.alive = true;
-		player.turnSpeed = 0.2f;
+		player.alive = true; 
 		player.speed = 0.2f;
 
 		bullets = new ArrayList<Bullet>();
@@ -55,7 +54,7 @@ public class GameplayScreen extends BasicGameState
 	public void initEnemies() throws SlickException
 	{
 		StoneGholem e = new StoneGholem(new Image("Images/stoneGolem.png"));
-		e.x = 700;
+		e.x = 10;
 		e.y = 300;
 		e.angle = 270; //to the left
 		e.alive = true;
@@ -182,6 +181,49 @@ public class GameplayScreen extends BasicGameState
 		{
 			Bullet b = bullets.get(i); //get the current bullet
 			b.update(delta); //update the current bullet
+			
+			
+			//for every enemy
+			for(int j=0; j < enemies.size(); j++)
+			{
+				//get the current enemy
+				Enemy e = enemies.get(j);
+				
+				//if the bullet is hitting the enemy and its the players bullet
+				if(b.spriteCollision(e) && b.owner == player)
+				{
+					e.health--; //remove one health from the enemy (he was hit)
+					if(e.health <= 0)//if the enemies health drops to 0
+					{
+						enemies.remove(j); //kill the enemy
+						j--; //shorten the enemy list by one (an enemy died)
+					}//end if
+					
+					bullets.remove(i); //kill the bullet
+					i--; //shorten the bullet list (a bullet died)
+				}//end if
+			}//end for loop
+			
+			//if its an enemy bullet
+			if(b.owner != player)
+			{
+				//if the enemy bullet hits the player
+				if(b.spriteCollision(player))
+				{
+					player.health--; //take one health away from player
+					//if player health becomes less than 0
+					if(player.health <= 0)
+					{
+						System.exit(0); //exit the game (the player died)
+					}//end if
+					
+					bullets.remove(i); //kill the bullet
+					i--; //make the size of bullet list one less (a bullet died)
+					
+				}//end if
+			}//end if
+			
+			
 		}//end for loop
 	}//end updateBullets
 
