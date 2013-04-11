@@ -140,7 +140,7 @@ public class GameplayScreen extends BasicGameState
 		}
 
 		/* Shoot bullets */
-		if(input.isKeyPressed(Input.KEY_SPACE))
+		if(input.isKeyPressed(Input.KEY_SPACE)) 
 		{
 			Bullet b = new Bullet(new Image("images/sprite_bullet.png"));
 			b.x = player.x;//put bullets x-value at the players x-value
