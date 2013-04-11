@@ -15,6 +15,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import com.damien.Map.Area;
 import com.damien.main.Driver;
 import com.damien.sprites.Bullet;
+import com.damien.sprites.Chaser;
 import com.damien.sprites.Enemy;
 import com.damien.sprites.Player;
 import com.damien.sprites.Sprite;
@@ -28,10 +29,16 @@ public class GameplayScreen extends BasicGameState
 	ArrayList<Enemy> enemies;
 	ArrayList<Bullet> bullets;
 	
+	public static int score = 0;
+	
 	/* variables to control the spawning of StoneGholems */
 	long gholemDelay = 3000; //1000 = 1 second
 	long nextGholem; //the exact time the next StoneGholem will appear
 	Random rand = new Random(); //random number generator
+	
+	/* variables to control the spawning of Chasers */
+	long chaserDelay = 2000; //1000 = 1 second
+	long nextChaser;
 	
 	
 	Area testArea;
@@ -45,6 +52,7 @@ public class GameplayScreen extends BasicGameState
 	public void enter(GameContainer gc, StateBasedGame sb)
 	{
 		nextGholem = System.currentTimeMillis() + gholemDelay;
+		nextChaser = System.currentTimeMillis() + chaserDelay;
 	}
  
 	@Override
@@ -78,6 +86,14 @@ public class GameplayScreen extends BasicGameState
 		e.angle = 270; //to the left
 		e.alive = true;
 		enemies.add(e);
+		
+		Chaser c = new Chaser(new Image("Images/chaser.png"));
+		c.x = 770;
+		c.y = 0;
+		c.angle = 90;
+		c.alive = true;
+		c.speed = 0.4f;
+		enemies.add(c);
 	}
 	
 	public void renderEnemies(GameContainer gc, StateBasedGame sb, Graphics g) throws SlickException
@@ -89,6 +105,11 @@ public class GameplayScreen extends BasicGameState
 			e.draw(g); //draw the current enemy
 		}
 	}
+	
+	public void renderGUI(GameContainer gc, StateBasedGame sb, Graphics g) throws SlickException
+	{
+		g.drawString("Score: " + score, 350, 5);
+	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) throws SlickException
@@ -98,6 +119,8 @@ public class GameplayScreen extends BasicGameState
 		renderBullets(gc, sb, g);
 		renderEnemies(gc, sb, g);
 		player.draw(g);
+		
+		renderGUI(gc, sb, g);
 	}
 
 	public void renderBullets(GameContainer gc, StateBasedGame sb, Graphics g) throws SlickException
@@ -164,6 +187,49 @@ public class GameplayScreen extends BasicGameState
 		
 	}//end updateEnemies
 	
+	public void spawnChasers() throws SlickException
+	{
+		if(System.currentTimeMillis() >= nextChaser)
+		{
+			//0-3
+			int choice = rand.nextInt(4);
+			
+			Chaser c = new Chaser(new Image("Images/chaser.png"));
+			c.alive = true;
+			c.speed = 0.4f;
+			
+			//top left
+			if(choice == 0)
+			{
+				c.x = 0;
+				c.y = 0;
+			}//end if
+			//top right
+			else if(choice == 1)
+			{
+				c.x = 770;
+				c.y = 0;
+			}//end else if
+			//bottom left
+			else if(choice == 2)
+			{
+				c.x = 0;
+				c.y = 550;
+			}//end else if
+			//else bottom right
+			else
+			{
+				c.x = 770;
+				c.y = 550;
+			}//end else
+			
+			enemies.add(c); //add the new chaser to the enemy list
+			
+			//compute the time for the next chaser spawn
+			nextChaser = System.currentTimeMillis() + chaserDelay;
+		}//end if
+	}//end spawnChasers
+	
 	public void spawnGholems() throws SlickException
 	{
 		if(System.currentTimeMillis() >= nextGholem)
@@ -196,6 +262,7 @@ public class GameplayScreen extends BasicGameState
 
 		updatePlayer(gc, sb, delta, input);
 		spawnGholems();
+		spawnChasers();
 
 		if(input.isKeyPressed(Input.KEY_ESCAPE))
 		{
@@ -231,6 +298,7 @@ public class GameplayScreen extends BasicGameState
 					e.health--; //remove one health from the enemy (he was hit)
 					if(e.health <= 0)//if the enemies health drops to 0
 					{
+						score++; //add one point to player score
 						enemies.remove(j); //kill the enemy
 						j--; //shorten the enemy list by one (an enemy died)
 					}//end if
